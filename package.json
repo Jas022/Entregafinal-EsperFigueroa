@@ -1,0 +1,23 @@
+{
+  "name": "jesper",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "JasminEsper",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jas022/JasminEsper.git"
+  },
+  "author": "JasminEsper",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jas022/JasminEsper/issues"
+  },
+  "homepage": "https://github.com/Jas022/JasminEsper#readme",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
