@@ -1,23 +1,22 @@
 {
-  "name": "jesper",
+  "name": "borrador--desa--3",
   "type": "module",
   "version": "1.0.0",
-  "description": "JasminEsper",
-  "main": "app.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon /app.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Jas022/JasminEsper.git"
-  },
-  "author": "JasminEsper",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Jas022/JasminEsper/issues"
-  },
-  "homepage": "https://github.com/Jas022/JasminEsper#readme",
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "express-handlebars": "^7.1.3",
+    "socket.io": "^4.7.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.3"
   }
 }

@@ -1,11 +1,11 @@
 [
   {
     "id": 1,
-    "title": "Producto prueba",
-    "description": "Este es un producto prueba",
-    "price": 250,
+    "title": "Pinceles",
+    "description": "Pinceles varios tamaños",
+    "price": 900,
     "thumbnail": "Sin imagen",
-    "code": "abc123",
+    "code": "01",
     "stock": 25,
     "products": [
       {
@@ -92,15 +92,6 @@
     "price": 1300,
     "thumbnail": "Sin imagen",
     "code": "09",
-    "stock": 25
-  },
-  {
-    "id": 10,
-    "title": "Pinceles",
-    "description": "Pinceles varios tamaños",
-    "price": 900,
-    "thumbnail": "Sin imagen",
-    "code": "10",
     "stock": 25
   }
 ]
