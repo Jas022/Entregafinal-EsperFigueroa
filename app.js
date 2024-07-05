@@ -27,10 +27,9 @@ httpServer.listen(PUERTO, () => {
   console.log(`Servidor escuchando en el puerto ${PUERTO}`);
 });
 
-const io = new Server(httpServer);
-
 import ProductManager from "./src/productManager.js";
 const productManager = new ProductManager("./data/product.json");
+const io = new Server(httpServer);
 
 io.on("connection", async (socket) => {
   console.log("Un cliente se conectó");
