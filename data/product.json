@@ -84,14 +84,5 @@
     "thumbnail": "Sin imagen",
     "code": "08",
     "stock": 25
-  },
-  {
-    "id": 9,
-    "title": "Sahumos 7 poderes",
-    "description": "Sahumerios 7 poderes",
-    "price": 1300,
-    "thumbnail": "Sin imagen",
-    "code": "09",
-    "stock": 25
   }
 ]
