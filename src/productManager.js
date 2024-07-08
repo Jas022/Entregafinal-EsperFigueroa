@@ -133,7 +133,9 @@ class ProductManager {
     try {
       const arrayProductos = await this.leerArchivo();
 
-      const index = arrayProductos.findIndex((item) => item.id === id);
+      const index = arrayProductos.findIndex(
+        (item) => item.id.toString() == id.toString()
+      );
 
       if (index !== -1) {
         arrayProductos.splice(index, 1);
