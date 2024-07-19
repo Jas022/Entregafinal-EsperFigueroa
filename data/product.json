@@ -1,88 +1,90 @@
 [
   {
-    "id": 1,
     "title": "Pinceles",
     "description": "Pinceles varios tamaños",
     "price": 900,
-    "thumbnail": "Sin imagen",
+    "img": "Sin imagen",
     "code": "01",
     "stock": 25,
-    "products": [
-      {
-        "product": "4",
-        "quantity": 1
-      },
-      {
-        "product": "1",
-        "quantity": 1
-      },
-      {
-        "product": "3",
-        "quantity": 3
-      }
-    ]
+    "category": "artistica",
+    "status": true,
+    "thumbnail": []
   },
   {
-    "id": 2,
     "title": "Florero",
     "description": "Florero cerámica",
     "price": 2500,
-    "thumbnail": "Sin imagen",
+    "img": "Sin imagen",
     "code": "02",
-    "stock": 25
+    "stock": 25,
+    "category": "deco",
+    "status": true,
+    "thumbnail": []
   },
   {
-    "id": 3,
     "title": "Maceta",
     "description": "Maceta blanca con flores",
     "price": 2000,
-    "thumbnail": "Sin imagen",
+    "img": "Sin imagen",
     "code": "03",
-    "stock": 25
+    "stock": 25,
+    "category": "deco",
+    "status": true,
+    "thumbnail": []
   },
   {
-    "id": 4,
     "title": "Reloj",
     "description": "Reloj de pared",
     "price": 3000,
-    "thumbnail": "Sin imagen",
+    "img": "Sin imagen",
     "code": "04",
-    "stock": 25
+    "stock": 25,
+    "category": "deco",
+    "status": true,
+    "thumbnail": []
   },
   {
-    "id": 5,
     "title": "Velas lavanda",
     "description": "Velas aroma a lavanda",
     "price": 1000,
-    "thumbnail": "Sin imagen",
+    "img": "Sin imagen",
     "code": "05",
-    "stock": 25
+    "stock": 25,
+    "category": "aromas",
+    "status": true,
+    "thumbnail": []
   },
   {
-    "id": 6,
     "title": "Perlas Perfumadas",
     "description": "Perlas con perfume a Jazmin",
     "price": 1200,
-    "thumbnail": "Sin imagen",
+    "img": "Sin imagen",
     "code": "06",
-    "stock": 25
+    "stock": 25,
+    "category": "aromas",
+    "status": true,
+    "thumbnail": []
   },
   {
-    "id": 7,
     "title": "Sahumerios",
     "description": "Sahumerios surtidos",
     "price": 900,
-    "thumbnail": "Sin imagen",
+    "img": "Sin imagen",
     "code": "07",
-    "stock": 25
+    "stock": 25,
+    "category": "aromas",
+    "status": true,
+    "thumbnail": []
   },
   {
-    "id": 8,
     "title": "Maceta Verde",
     "description": "Maceta ceramica verde con detalles",
     "price": 3200,
-    "thumbnail": "Sin imagen",
+    "img": "Sin imagen",
     "code": "08",
-    "stock": 25
+    "stock": 25,
+    "category": "deco",
+    "status": true,
+    "thumbnail": []
   }
 ]

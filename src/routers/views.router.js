@@ -4,7 +4,7 @@ const router = Router();
 router.get("/realtimeproducts", async (req, res) => {
   res.render("realtimeproducts");
 });
-import ProductManager from "../productManager.js";
+import ProductManager from "../dao/fs/productManager.js";
 const productManager = new ProductManager("./data/product.json");
 
 router.get("/", async (req, res) => {
