@@ -8,7 +8,7 @@
     "stock": 25,
     "category": "artistica",
     "status": true,
-    "thumbnail": []
+    "thumbnails": []
   },
   {
     "title": "Florero",
@@ -19,7 +19,7 @@
     "stock": 25,
     "category": "deco",
     "status": true,
-    "thumbnail": []
+    "thumbnails": []
   },
   {
     "title": "Maceta",
@@ -30,7 +30,7 @@
     "stock": 25,
     "category": "deco",
     "status": true,
-    "thumbnail": []
+    "thumbnails": []
   },
   {
     "title": "Reloj",
@@ -41,7 +41,7 @@
     "stock": 25,
     "category": "deco",
     "status": true,
-    "thumbnail": []
+    "thumbnails": []
   },
   {
     "title": "Velas lavanda",
@@ -52,7 +52,7 @@
     "stock": 25,
     "category": "aromas",
     "status": true,
-    "thumbnail": []
+    "thumbnails": []
   },
   {
     "title": "Perlas Perfumadas",
@@ -63,7 +63,7 @@
     "stock": 25,
     "category": "aromas",
     "status": true,
-    "thumbnail": []
+    "thumbnails": []
   },
   {
     "title": "Sahumerios",
@@ -74,7 +74,7 @@
     "stock": 25,
     "category": "aromas",
     "status": true,
-    "thumbnail": []
+    "thumbnails": []
   },
   {
     "title": "Maceta Verde",
@@ -85,6 +85,18 @@
     "stock": 25,
     "category": "deco",
     "status": true,
-    "thumbnail": []
+    "thumbnails": []
+  },
+  {
+    "title": "Nuevo Producto",
+    "description": "Descripción del producto",
+    "price": 1234,
+    "img": "Imagen URL",
+    "code": "nuevo_codigo",
+    "stock": 10,
+    "category": "Categoría",
+    "status": true,
+    "thumbnails": [],
+    "id": null
   }
 ]

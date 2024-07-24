@@ -6,16 +6,52 @@ const productManager = new ProductManager();
 
 router.get("/", async (req, res) => {
   try {
-    const limit = req.query.limit;
-    const productos = await productManager.getProducts();
-    if (limit) {
-      res.json(productos.slice(0, limit));
-    } else {
-      res.json(productos);
+    const { limit = 10, page = 1, sort, query } = req.query;
+    const filter = {};
+
+    if (query) {
+      const queryObject = JSON.parse(query);
+      Object.assign(filter, queryObject);
     }
+
+    const sortOption =
+      sort === "asc" ? { price: 1 } : sort === "desc" ? { price: -1 } : {};
+
+    const options = {
+      page: parseInt(page, 10),
+      limit: parseInt(limit, 10),
+      sort: sortOption,
+    };
+
+    console.log("Filter:", filter);
+    console.log("Options:", options);
+
+    const result = await productManager.getProducts(filter, options);
+
+    console.log("Result:", result);
+
+    const response = {
+      status: "success",
+      payload: result.docs,
+      totalPages: result.totalPages,
+      prevPage: result.hasPrevPage ? result.prevPage : null,
+      nextPage: result.hasNextPage ? result.nextPage : null,
+      page: result.page,
+      hasPrevPage: result.hasPrevPage,
+      hasNextPage: result.hasNextPage,
+      prevLink: result.hasPrevPage
+        ? `/api/products?limit=${limit}&page=${result.prevPage}&sort=${sort}&query=${query}`
+        : null,
+      nextLink: result.hasNextPage
+        ? `/api/products?limit=${limit}&page=${result.nextPage}&sort=${sort}&query=${query}`
+        : null,
+    };
+
+    res.json(response);
   } catch (error) {
     console.error("Error al obtener productos", error);
     res.status(500).json({
+      status: "error",
       error: "Error interno del servidor",
     });
   }

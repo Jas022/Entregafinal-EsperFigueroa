@@ -56,7 +56,6 @@ class CartManager {
   async agregarProductoAlCarrito(cartId, productId, quantity = 1) {
     const carrito = await this.getCarritoById(cartId);
 
-    // Verificar si carrito.products no está definido y, si es así, inicializarlo como un arreglo vacío
     if (!carrito.products) {
       carrito.products = [];
     }
