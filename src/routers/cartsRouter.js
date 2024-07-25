@@ -1,4 +1,5 @@
 import express from "express";
+import mongoose from "mongoose";
 import CartManager from "../dao/db/cart-manager-db.js";
 import CartModel from "../dao/models/cart.model.js";
 const router = express.Router();
@@ -24,7 +25,6 @@ router.get("/:cid", async (req, res) => {
     );
 
     if (!carrito) {
-      console.log("No existe ese carrito con el id");
       return res.status(404).json({ error: "Carrito no encontrado" });
     }
 
@@ -49,6 +49,91 @@ router.post("/:cid/product/:pid", async (req, res) => {
     res.json(carritoActualizado.products);
   } catch (error) {
     console.error("Error al agregar producto al carrito", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+});
+
+router.get("/", async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const totalCarritos = await CartModel.countDocuments();
+
+    const carritos = await CartModel.find()
+      .skip(skip)
+      .limit(limit)
+      .populate("products.product", "_id title price");
+
+    const totalPages = Math.ceil(totalCarritos / limit);
+
+    const hasPrevPage = page > 1;
+    const hasNextPage = page < totalPages;
+    const prevPage = hasPrevPage ? page - 1 : null;
+    const nextPage = hasNextPage ? page + 1 : null;
+
+    const response = {
+      status: "success",
+      payload: carritos,
+      totalPages,
+      prevPage,
+      nextPage,
+      page,
+      hasPrevPage,
+      hasNextPage,
+      prevLink: hasPrevPage
+        ? `/api/carts?page=${prevPage}&limit=${limit}`
+        : null,
+      nextLink: hasNextPage
+        ? `/api/carts?page=${nextPage}&limit=${limit}`
+        : null,
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error("Error al obtener los carritos", error);
+    res
+      .status(500)
+      .json({ status: "error", message: "Error interno del servidor" });
+  }
+});
+
+router.delete("/:cid/product/:pid", async (req, res) => {
+  const cartId = req.params.cid;
+  const productId = req.params.pid;
+
+  try {
+    const carritoActualizado = await cartManager.eliminarProductoDelCarrito(
+      cartId,
+      productId
+    );
+    res.json({
+      message: "Producto eliminado del carrito",
+      carrito: carritoActualizado,
+    });
+  } catch (error) {
+    console.error("Error al eliminar producto del carrito", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+});
+router.delete("/:cid", async (req, res) => {
+  const cartId = req.params.cid;
+
+  try {
+    const carritoActualizado =
+      await cartManager.eliminarTodosLosProductosDelCarrito(cartId);
+
+    if (!carritoActualizado) {
+      return res.status(404).json({ error: "Carrito no encontrado" });
+    }
+
+    res.json({
+      message: "Todos los productos han sido eliminados del carrito",
+      carrito: carritoActualizado,
+    });
+  } catch (error) {
+    console.error("Error al eliminar todos los productos del carrito", error);
     res.status(500).json({ error: "Error interno del servidor" });
   }
 });
