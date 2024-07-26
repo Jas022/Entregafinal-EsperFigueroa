@@ -1,7 +1,11 @@
 const socket = io();
 
 socket.on("productos", (data) => {
-  renderProductos(data);
+  if (data && Array.isArray(data)) {
+    renderProductos(data);
+  } else {
+    console.error("Datos de productos no válidos:", data);
+  }
 });
 
 const renderProductos = (data) => {
@@ -10,9 +14,8 @@ const renderProductos = (data) => {
 
   data.forEach((item) => {
     const card = document.createElement("div");
-
     card.innerHTML = `  
-      <p>${item.id}</p>
+      <p>ID: ${item._id}</p>  <!-- Asegúrate de que el campo correcto esté siendo usado -->
       <p>${item.title}</p>
       <p>${item.price}</p>
       <button>Eliminar</button>
@@ -20,7 +23,7 @@ const renderProductos = (data) => {
     contenedorProductos.appendChild(card);
 
     card.querySelector("button").addEventListener("click", () => {
-      eliminarProducto(item.id);
+      eliminarProducto(item._id);
     });
   });
 };

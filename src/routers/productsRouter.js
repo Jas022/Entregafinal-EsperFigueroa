@@ -10,8 +10,15 @@ router.get("/", async (req, res) => {
     const filter = {};
 
     if (query) {
-      const queryObject = JSON.parse(query);
-      Object.assign(filter, queryObject);
+      try {
+        const queryObject = JSON.parse(query);
+        Object.assign(filter, queryObject);
+      } catch (e) {
+        return res.status(400).json({
+          status: "error",
+          error: "El parámetro 'query' no es un JSON válido.",
+        });
+      }
     }
 
     const sortOption =
@@ -34,16 +41,20 @@ router.get("/", async (req, res) => {
       status: "success",
       payload: result.docs,
       totalPages: result.totalPages,
-      prevPage: result.hasPrevPage ? result.prevPage : null,
-      nextPage: result.hasNextPage ? result.nextPage : null,
+      prevPage: result.prevPage || null,
+      nextPage: result.nextPage || null,
       page: result.page,
       hasPrevPage: result.hasPrevPage,
       hasNextPage: result.hasNextPage,
       prevLink: result.hasPrevPage
-        ? `/api/products?limit=${limit}&page=${result.prevPage}&sort=${sort}&query=${query}`
+        ? `/api/products?limit=${limit}&page=${
+            result.prevPage
+          }&sort=${sort}&query=${encodeURIComponent(JSON.stringify(filter))}`
         : null,
       nextLink: result.hasNextPage
-        ? `/api/products?limit=${limit}&page=${result.nextPage}&sort=${sort}&query=${query}`
+        ? `/api/products?limit=${limit}&page=${
+            result.nextPage
+          }&sort=${sort}&query=${encodeURIComponent(JSON.stringify(filter))}`
         : null,
     };
 
@@ -63,7 +74,7 @@ router.get("/:pid", async (req, res) => {
   try {
     const producto = await productManager.getProductById(id);
     if (!producto) {
-      return res.json({
+      return res.status(404).json({
         error: "Producto no encontrado",
       });
     }

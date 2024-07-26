@@ -126,6 +126,31 @@ class CartManager {
       );
     }
   }
+  async updateCart(cartId, products) {
+    try {
+      if (!mongoose.Types.ObjectId.isValid(cartId)) {
+        throw new Error("Invalid cart ID");
+      }
+
+      if (!Array.isArray(products)) {
+        throw new Error("Products must be an array");
+      }
+
+      const carritoActualizado = await CartModel.findByIdAndUpdate(
+        cartId,
+        { products },
+        { new: true }
+      ).populate("products.product", "_id title price");
+
+      if (!carritoActualizado) {
+        throw new Error("Carrito no encontrado");
+      }
+
+      return carritoActualizado;
+    } catch (error) {
+      throw new Error(`Error al actualizar el carrito: ${error.message}`);
+    }
+  }
 }
 
 export default CartManager;

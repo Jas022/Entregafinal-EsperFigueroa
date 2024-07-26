@@ -34,17 +34,33 @@ const io = new Server(httpServer);
 io.on("connection", async (socket) => {
   console.log("Un cliente se conectó");
 
-  socket.emit("productos", await productManager.getProducts());
+  try {
+    const result = await productManager.getProducts();
+    console.log("Productos enviados:", result.docs);
+    socket.emit("productos", result.docs || []);
+  } catch (error) {
+    console.error("Error al obtener productos:", error);
+  }
 
   socket.on("eliminarProducto", async (id) => {
-    await productManager.deleteProduct(id);
-
-    io.sockets.emit("productos", await productManager.getProducts());
+    try {
+      await productManager.deleteProduct(id);
+      const result = await productManager.getProducts();
+      console.log("Productos después de eliminar:", result.docs);
+      io.sockets.emit("productos", result.docs || []);
+    } catch (error) {
+      console.error("Error al eliminar producto:", error);
+    }
   });
 
   socket.on("agregarProducto", async (producto) => {
-    await productManager.addProduct(producto);
-
-    io.sockets.emit("productos", await productManager.getProducts());
+    try {
+      await productManager.addProduct(producto);
+      const result = await productManager.getProducts();
+      console.log("Productos después de agregar:", result.docs);
+      io.sockets.emit("productos", result.docs || []);
+    } catch (error) {
+      console.error("Error al agregar producto:", error);
+    }
   });
 });

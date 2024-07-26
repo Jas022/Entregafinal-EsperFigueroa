@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenidos a ArtesaniasSte</title>
+    <link rel="stylesheet" href="./Css/indexJs.css">
+</head>
+
+<body>
+    <h1>¡Bienvenidos a ArtesaniasSte!</h1>
+    <h2>Listado de prooductos</h2>
+    <div id="contenedorProductos"></div>
+    <button id="btnEnviar">Agregar Producto</button>
+    <input id="title" placeholder="Title">
+    <input id="description" placeholder="Description">
+    <input id="price" placeholder="Price">
+    <input id="img" placeholder="Image URL">
+    <input id="code" placeholder="Code">
+    <input id="stock" placeholder="Stock">
+    <input id="category" placeholder="Category">
+    <select id="status">
+        <option value="true">Available</option>
+        <option value="false">Unavailable</option>
+    </select>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./index.js"></script>
+</body>
+
+</html>

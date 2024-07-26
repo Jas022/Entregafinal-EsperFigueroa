@@ -43,63 +43,20 @@ class ProductManager {
     }
   }
 
-  async getProducts({ limit = 10, page = 1, sort, query } = {}) {
+  async getProducts(filter = {}, options = {}) {
     try {
-      const skip = (page - 1) * limit;
+      const { page = 1, limit = 10, sort = {} } = options;
 
-      let queryOptions = {};
+      // Asegúrate de que `page` y `limit` son números
+      const result = await ProductModel.paginate(filter, {
+        page: parseInt(page, 10),
+        limit: parseInt(limit, 10),
+        sort,
+      });
 
-      if (query) {
-        queryOptions = { category: query };
-      }
-
-      const sortOptions = {};
-      if (sort) {
-        if (sort === "asc" || sort === "desc") {
-          sortOptions.price = sort === "asc" ? 1 : -1;
-        }
-      }
-
-      console.log("Query Options:", queryOptions);
-      console.log("Sort Options:", sortOptions);
-      console.log("Skip:", skip);
-      console.log("Limit:", limit);
-
-      const productos = await ProductModel.find(queryOptions)
-        .sort(sortOptions)
-        .skip(skip)
-        .limit(limit);
-
-      console.log("Productos encontrados:", productos);
-
-      const totalProducts = await ProductModel.countDocuments(queryOptions);
-      console.log("Total Products:", totalProducts);
-
-      const totalPages = Math.ceil(totalProducts / limit);
-      const hasPrevPage = page > 1;
-      const hasNextPage = page < totalPages;
-
-      return {
-        docs: productos,
-        totalPages,
-        prevPage: hasPrevPage ? page - 1 : null,
-        nextPage: hasNextPage ? page + 1 : null,
-        page,
-        hasPrevPage,
-        hasNextPage,
-        prevLink: hasPrevPage
-          ? `/api/products?limit=${limit}&page=${
-              page - 1
-            }&sort=${sort}&query=${query}`
-          : null,
-        nextLink: hasNextPage
-          ? `/api/products?limit=${limit}&page=${
-              page + 1
-            }&sort=${sort}&query=${query}`
-          : null,
-      };
+      return result;
     } catch (error) {
-      console.log("Error al obtener los productos", error);
+      console.log("Error al obtener productos", error);
       throw error;
     }
   }
