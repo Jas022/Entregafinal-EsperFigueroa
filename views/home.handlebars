@@ -1,13 +1,46 @@
-<h1>Bienvenidos a Artesanias Ste</h1>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista de Productos</title>
+    <link rel="stylesheet" href="/src/public/Css/indexJs.css" />
+  </head>
+  <body>
+    <h1>Lista de Productos</h1>
 
-<p>Conoce nuestros productos</p>
+    {{#if products.length}}
+      <div class="product-container">
+        {{#each products}}
+          <div class="card">
+            <img src="{{this.img}}" alt="{{this.title}}" class="card-img" />
+            <div class="card-body">
+              <h2 class="card-title">{{this.title}}</h2>
+              <p class="card-description">{{this.description}}</p>
+              <p class="card-price">Precio: ${{this.price}}</p>
+              <p class="card-category">Categoría: {{this.category}}</p>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    {{else}}
+      <p>No se encontraron productos.</p>
+    {{/if}}
 
-<div class="contenedorProductos">
-  {{#each productos}}
-    <div>
-      <p> {{this.title}} </p>
-      <p> {{this.description}} </p>
-      <p> {{this.price}} </p>
+    <div class="pagination">
+      {{#if pagination.hasPrevPage}}
+        <a
+          href="/products?limit={{pagination.limit}}&page={{pagination.prevPage}}&sort={{pagination.sort}}&query={{pagination.query}}"
+        >Anterior</a>
+      {{/if}}
+
+      {{#if pagination.hasNextPage}}
+        <a
+          href="/products?limit={{pagination.limit}}&page={{pagination.nextPage}}&sort={{pagination.sort}}&query={{pagination.query}}"
+        >Siguiente</a>
+      {{/if}}
     </div>
-  {{/each}}
-</div>
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="../src/public/index.js"></script>
+  </body>
+</html>

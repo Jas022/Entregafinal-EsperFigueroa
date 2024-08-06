@@ -15,34 +15,53 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: "Error interno del servidor" });
   }
 });
+
 router.get("/products", async (req, res) => {
   try {
-    const { page = 1, limit = 2 } = req.query;
-    const productos = await productManager.getProducts({
-      page: parseInt(page),
-      limit: parseInt(limit),
+    const { limit = 10, page = 1, sort, query } = req.query;
+
+    const parsedQuery = query ? JSON.parse(query) : {};
+
+    const products = await productManager.getProducts({
+      limit,
+      page,
+      sort,
+      query: parsedQuery,
     });
 
-    const nuevoArray = productos.docs.map((producto) => {
-      const { _id, ...rest } = producto.toObject();
-      return rest;
-    });
-
-    res.render("products", {
-      productos: nuevoArray,
-      hasPrevPage: productos.hasPrevPage,
-      hasNextPage: productos.hasNextPage,
-      prevPage: productos.prevPage,
-      nextPage: productos.nextPage,
-      currentPage: productos.page,
-      totalPages: productos.totalPages,
+    res.render("home", {
+      products: products.docs,
+      pagination: {
+        totalPages: products.totalPages,
+        prevPage: products.prevPage,
+        nextPage: products.nextPage,
+        page: products.page,
+        hasPrevPage: products.hasPrevPage,
+        hasNextPage: products.hasNextPage,
+        limit: limit,
+        sort: sort,
+        query: JSON.stringify(parsedQuery),
+      },
     });
   } catch (error) {
-    console.error("Error al obtener productos", error);
-    res.status(500).json({
-      status: "error",
-      error: "Error interno del servidor",
-    });
+    console.log("Error al obtener los productos", error);
+    res.status(500).send("Error interno del servidor");
+  }
+});
+
+router.get("/products/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await productManager.getProductById(id);
+
+    if (!product) {
+      return res.status(404).send("Producto no encontrado");
+    }
+
+    res.render("productDetail", { product });
+  } catch (error) {
+    console.log("Error al obtener el producto por id", error);
+    res.status(500).send("Error interno del servidor");
   }
 });
 
@@ -59,7 +78,6 @@ router.get("/carts/:cid", async (req, res) => {
 
     const productosEnCarrito = carrito.products.map((item) => ({
       product: item.product.toObject(),
-
       quantity: item.quantity,
     }));
 

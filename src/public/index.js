@@ -32,9 +32,14 @@ const eliminarProducto = (id) => {
   socket.emit("eliminarProducto", id);
 };
 
-document.getElementById("btnEnviar").addEventListener("click", () => {
-  agregarProducto();
-});
+const btnEnviar = document.getElementById("btnEnviar");
+if (btnEnviar) {
+  btnEnviar.addEventListener("click", () => {
+    agregarProducto();
+  });
+} else {
+  console.error("btnEnviar no encontrado en el DOM");
+}
 
 const agregarProducto = () => {
   const producto = {

@@ -43,20 +43,52 @@ class ProductManager {
     }
   }
 
-  async getProducts(filter = {}, options = {}) {
+  async getProducts({ limit = 10, page = 1, sort, query } = {}) {
     try {
-      const { page = 1, limit = 10, sort = {} } = options;
+      const skip = (page - 1) * limit;
 
-      // Asegúrate de que `page` y `limit` son números
-      const result = await ProductModel.paginate(filter, {
-        page: parseInt(page, 10),
-        limit: parseInt(limit, 10),
-        sort,
-      });
+      const filter =
+        typeof query === "string" ? JSON.parse(query) : query || {};
 
-      return result;
+      console.log("Filter:", filter);
+
+      const sortOptions = {};
+      if (sort) {
+        sortOptions.price = sort === "asc" ? 1 : -1;
+      }
+
+      const productos = await ProductModel.find(filter)
+        .sort(sortOptions)
+        .skip(skip)
+        .limit(limit);
+
+      const totalProducts = await ProductModel.countDocuments(filter);
+
+      const totalPages = Math.ceil(totalProducts / limit);
+      const hasPrevPage = page > 1;
+      const hasNextPage = page < totalPages;
+
+      return {
+        docs: productos,
+        totalPages,
+        prevPage: hasPrevPage ? page - 1 : null,
+        nextPage: hasNextPage ? page + 1 : null,
+        page,
+        hasPrevPage,
+        hasNextPage,
+        prevLink: hasPrevPage
+          ? `/api/products?limit=${limit}&page=${
+              page - 1
+            }&sort=${sort}&query=${encodeURIComponent(JSON.stringify(filter))}`
+          : null,
+        nextLink: hasNextPage
+          ? `/api/products?limit=${limit}&page=${
+              page + 1
+            }&sort=${sort}&query=${encodeURIComponent(JSON.stringify(filter))}`
+          : null,
+      };
     } catch (error) {
-      console.log("Error al obtener productos", error);
+      console.log("Error al obtener los productos", error);
       throw error;
     }
   }
@@ -81,7 +113,8 @@ class ProductManager {
     try {
       const updateado = await ProductModel.findByIdAndUpdate(
         id,
-        productoActualizado
+        productoActualizado,
+        { new: true }
       );
 
       if (!updateado) {

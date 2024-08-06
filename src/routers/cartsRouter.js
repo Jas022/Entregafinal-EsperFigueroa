@@ -85,59 +85,11 @@ router.post("/:cid/product/:pid", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const sort =
-      req.query.sort === "asc" ? 1 : req.query.sort === "desc" ? -1 : null;
-    const query = req.query.query || {};
-
-    const queryFilters = {};
-    if (query.category) {
-      queryFilters.category = query.category;
-    }
-    if (query.available) {
-      queryFilters.available = query.available === "true";
-    }
-
-    const skip = (page - 1) * limit;
-    const totalProducts = await ProductModel.countDocuments(queryFilters);
-
-    const products = await ProductModel.find(queryFilters)
-      .skip(skip)
-      .limit(limit)
-      .sort(sort ? { price: sort } : {})
-      .exec();
-
-    const totalPages = Math.ceil(totalProducts / limit);
-
-    const hasPrevPage = page > 1;
-    const hasNextPage = page < totalPages;
-    const prevPage = hasPrevPage ? page - 1 : null;
-    const nextPage = hasNextPage ? page + 1 : null;
-
-    const response = {
-      status: "success",
-      payload: products,
-      totalPages,
-      prevPage,
-      nextPage,
-      page,
-      hasPrevPage,
-      hasNextPage,
-      prevLink: hasPrevPage
-        ? `/api/products?page=${prevPage}&limit=${limit}&sort=${req.query.sort}`
-        : null,
-      nextLink: hasNextPage
-        ? `/api/products?page=${nextPage}&limit=${limit}&sort=${req.query.sort}`
-        : null,
-    };
-
-    res.json(response);
+    const carritos = await cartManager.obtenerTodosLosCarritos();
+    res.json({ status: "success", payload: carritos });
   } catch (error) {
-    console.error("Error al obtener los productos", error);
-    res
-      .status(500)
-      .json({ status: "error", error: "Error interno del servidor" });
+    console.error("Error al obtener todos los carritos", error);
+    res.status(500).json({ error: "Error interno del servidor" });
   }
 });
 
@@ -160,25 +112,79 @@ router.delete("/:cid/product/:pid", async (req, res) => {
   }
 });
 
-// Ruta para eliminar todos los productos del carrito
 router.delete("/:cid", async (req, res) => {
   const cartId = req.params.cid;
 
   try {
-    const carritoActualizado =
-      await cartManager.eliminarTodosLosProductosDelCarrito(cartId);
+    const resultado = await cartManager.eliminarCarrito(cartId);
+    res.json({
+      message: "Carrito eliminado exitosamente",
+    });
+  } catch (error) {
+    console.error("Error al eliminar carrito", error);
+    res.status(500).json({
+      error: "Error interno del servidor",
+    });
+  }
+});
+
+// Ruta para actualizar el carrito completo
+router.put("/:cid", async (req, res) => {
+  const cartId = req.params.cid;
+  const products = req.body.products;
+
+  if (!Array.isArray(products)) {
+    return res
+      .status(400)
+      .json({ error: "El formato de los productos es incorrecto." });
+  }
+
+  try {
+    const carritoActualizado = await CartModel.findByIdAndUpdate(
+      cartId,
+      { products },
+      { new: true }
+    ).populate("products.product", "_id title price");
 
     if (!carritoActualizado) {
       return res.status(404).json({ error: "Carrito no encontrado" });
     }
 
-    res.json({
-      message: "Todos los productos han sido eliminados del carrito",
-      carrito: carritoActualizado,
-    });
+    res.json(carritoActualizado);
   } catch (error) {
-    console.error("Error al eliminar todos los productos del carrito", error);
+    console.error("Error al actualizar el carrito", error);
     res.status(500).json({ error: "Error interno del servidor" });
+  }
+});
+
+// Ruta para actualizar la cantidad de un producto específico en el carrito
+router.put("/:cid/products/:pid", async (req, res) => {
+  const { cid, pid } = req.params;
+  const { quantity } = req.body;
+
+  console.log(`PUT /${cid}/products/${pid} - Quantity: ${quantity}`);
+
+  try {
+    if (typeof quantity !== "number" || quantity <= 0) {
+      return res
+        .status(400)
+        .json({ error: "Quantity must be a positive number" });
+    }
+
+    const updatedCart = await cartManager.updateProductQuantity(
+      cid,
+      pid,
+      quantity
+    );
+    res.json(updatedCart);
+  } catch (error) {
+    console.error(
+      "Error al actualizar la cantidad del producto en el carrito:",
+      error
+    );
+    res
+      .status(500)
+      .json({ status: "error", error: "Error interno del servidor" });
   }
 });
 
