@@ -190,48 +190,31 @@ class CartManager {
   }
   async updateProductQuantity(cartId, productId, quantity) {
     try {
-      console.log(
-        `Update Request - Cart ID: ${cartId}, Product ID: ${productId}, Quantity: ${quantity}`
+      const cart = await CartModel.findById(cartId).populate(
+        "products.product"
       );
 
-      if (
-        !mongoose.Types.ObjectId.isValid(cartId) ||
-        !mongoose.Types.ObjectId.isValid(productId)
-      ) {
-        throw new Error("Invalid cart or product ID");
-      }
-
-      if (quantity <= 0) {
-        throw new Error("Quantity must be greater than 0");
-      }
-
-      const cart = await CartModel.findById(cartId);
       if (!cart) {
-        console.log("Cart not found");
-        throw new Error("Cart not found");
+        throw new Error("Carrito no encontrado");
       }
 
-      const productIndex = cart.products.findIndex(
-        (p) => p.product.toString() === productId
+      const productInCart = cart.products.find(
+        (p) => p.product._id.toString() === productId
       );
 
-      if (productIndex === -1) {
-        console.log("Product not found in cart");
-        throw new Error("Product not found in cart");
+      if (!productInCart) {
+        throw new Error("Producto no encontrado en el carrito");
       }
 
-      cart.products[productIndex].quantity = quantity;
+      productInCart.quantity = quantity;
 
-      const updatedCart = await cart.save();
-      console.log("Cart updated successfully:", updatedCart);
+      await cart.save();
 
-      return await CartModel.findById(cartId).populate(
-        "products.product",
-        "_id title price"
-      );
+      return cart;
     } catch (error) {
-      console.error("Error updating product quantity in cart:", error);
-      throw new Error("Error updating product quantity in cart");
+      throw new Error(
+        `Error al actualizar la cantidad del producto en el carrito: ${error.message}`
+      );
     }
   }
 }

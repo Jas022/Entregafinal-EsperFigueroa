@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import express from "express";
 import CartManager from "../dao/db/cart-manager-db.js";
 import ProductModel from "../dao/models/product.model.js";
@@ -5,35 +6,6 @@ import CartModel from "../dao/models/cart.model.js";
 
 const router = express.Router();
 const cartManager = new CartManager();
-
-// Ruta para actualizar el carrito
-router.put("/:cid", async (req, res) => {
-  const cartId = req.params.cid;
-  const products = req.body.products;
-
-  if (!Array.isArray(products)) {
-    return res
-      .status(400)
-      .json({ error: "El formato de los productos es incorrecto." });
-  }
-
-  try {
-    const carritoActualizado = await CartModel.findByIdAndUpdate(
-      cartId,
-      { products },
-      { new: true }
-    ).populate("products.product", "_id title price");
-
-    if (!carritoActualizado) {
-      return res.status(404).json({ error: "Carrito no encontrado" });
-    }
-
-    res.json(carritoActualizado);
-  } catch (error) {
-    console.error("Error al actualizar el carrito", error);
-    res.status(500).json({ error: "Error interno del servidor" });
-  }
-});
 
 router.post("/", async (req, res) => {
   try {
@@ -158,22 +130,14 @@ router.put("/:cid", async (req, res) => {
 });
 
 // Ruta para actualizar la cantidad de un producto específico en el carrito
-router.put("/:cid/products/:pid", async (req, res) => {
-  const { cid, pid } = req.params;
+router.put("/:cartId/products/:productId", async (req, res) => {
+  const { cartId, productId } = req.params;
   const { quantity } = req.body;
 
-  console.log(`PUT /${cid}/products/${pid} - Quantity: ${quantity}`);
-
   try {
-    if (typeof quantity !== "number" || quantity <= 0) {
-      return res
-        .status(400)
-        .json({ error: "Quantity must be a positive number" });
-    }
-
     const updatedCart = await cartManager.updateProductQuantity(
-      cid,
-      pid,
+      cartId,
+      productId,
       quantity
     );
     res.json(updatedCart);
@@ -182,9 +146,7 @@ router.put("/:cid/products/:pid", async (req, res) => {
       "Error al actualizar la cantidad del producto en el carrito:",
       error
     );
-    res
-      .status(500)
-      .json({ status: "error", error: "Error interno del servidor" });
+    res.status(500).json({ status: "error", error: error.message });
   }
 });
 
