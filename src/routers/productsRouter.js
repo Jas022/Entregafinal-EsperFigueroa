@@ -2,7 +2,7 @@ import express from "express";
 const router = express.Router();
 
 import ProductManager from "../dao/db/product-manager-db.js";
-const productManager = new ProductManager();
+const productManager = new ProductManager("./data/product.json");
 
 router.get("/", async (req, res) => {
   try {
@@ -134,6 +134,16 @@ router.delete("/:pid", async (req, res) => {
     res.status(500).json({
       error: "Error interno del servidor",
     });
+  }
+});
+router.get('/category/:category', async (req, res) => {
+  try {
+    const { category } = req.params;
+    const products = await productManager.getProductsByCategory(category);
+    res.json(products);
+  } catch (error) {
+    console.error('Error fetching products by category:', error);
+    res.status(500).send('Error fetching products by category');
   }
 });
 

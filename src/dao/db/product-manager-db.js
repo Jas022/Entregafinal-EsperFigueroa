@@ -108,7 +108,15 @@ class ProductManager {
       console.log("Error al traer un producto por id");
     }
   }
-
+  async getProductsByCategory(category) {
+    try {
+      const products = await ProductModel.find({ category: category });
+      return products;
+    } catch (error) {
+      console.error("Error fetching products by category:", error);
+      throw error;
+    }
+  }
   async updateProduct(id, productoActualizado) {
     try {
       const updateado = await ProductModel.findByIdAndUpdate(
@@ -144,6 +152,7 @@ class ProductManager {
       throw error;
     }
   }
+  
 }
 
 export default ProductManager;

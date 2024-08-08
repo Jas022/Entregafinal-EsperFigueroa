@@ -68,6 +68,25 @@ io.on("connection", async (socket) => {
     }
   });
 });
+app.get("/", async (req, res) => {
+  const page = parseInt(req.query.page) || 1; 
+  const limit = 10; 
+
+  try {
+    const products = await fetchProductsByPage(page, limit); 
+    const totalProducts = await getTotalProducts(); 
+
+    res.render("home", {
+      products: products,
+      currentPage: page,
+      isFirstPage: page === 1,
+      isLastPage: page * limit >= totalProducts,
+    });
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).send("Error fetching products");
+  }
+});
 
 httpServer.listen(PUERTO, () => {
   console.log(`Servidor escuchando en el puerto ${PUERTO}`);
