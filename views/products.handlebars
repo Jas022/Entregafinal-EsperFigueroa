@@ -3,37 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Productos</title>
+    <title>Detalles del Producto</title>
   </head>
   <body>
-    <h1>Productos</h1>
-
-    {{#if products.length}}
-      <div class="product-container">
-        {{#each products}}
-          <div class="card">
-            <h2>{{this.title}}</h2>
-            <p>{{this.description}}</p>
-            <p>Price: {{this.price}}</p>
-            <p>Category: {{this.category}}</p>
-            <a href="/products/{{this._id}}">View Details</a>
-          </div>
-        {{/each}}
-      </div>
-      <div class="pagination">
-        {{#if pagination.hasPrevPage}}
-          <a
-            href="/products?limit={{pagination.limit}}&page={{pagination.prevPage}}&sort={{pagination.sort}}&query={{pagination.query}}"
-          >Previous</a>
-        {{/if}}
-        {{#if pagination.hasNextPage}}
-          <a
-            href="/products?limit={{pagination.limit}}&page={{pagination.nextPage}}&sort={{pagination.sort}}&query={{pagination.query}}"
-          >Next</a>
-        {{/if}}
-      </div>
-    {{else}}
-      <p>No products found.</p>
-    {{/if}}
+    <h1>{{product.title}}</h1>
+    <div class="product-details">
+      <img src="{{product.img}}" alt="{{product.title}}" />
+      <p>{{product.description}}</p>
+      <p>Precio: ${{product.price}}</p>
+      <p>Categoría: {{product.category}}</p>
+      <form action="/cart/add/{{product._id}}" method="post">
+        <button type="submit">Agregar al carrito</button>
+      </form>
+    </div>
+    <a href="/views/home.handlebars">Volver a productos</a>
   </body>
 </html>
+

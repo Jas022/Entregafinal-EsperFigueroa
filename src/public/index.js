@@ -1,57 +1,59 @@
-const socket = io();
+document.addEventListener("DOMContentLoaded", () => {
+  const socket = io();
 
-socket.on("productos", (data) => {
-  if (data && Array.isArray(data)) {
-    renderProductos(data);
-  } else {
-    console.error("Datos de productos no válidos:", data);
-  }
-});
+  socket.on("products", (data) => {
+    if (data && Array.isArray(data)) {
+      renderProductos(data);
+    } else {
+      console.error("Datos de productos no válidos:", data);
+    }
+  });
 
-const renderProductos = (data) => {
-  const contenedorProductos = document.getElementById("contenedorProductos");
-  contenedorProductos.innerHTML = "";
+  const renderProductos = (data) => {
+    const contenedorProductos = document.getElementById("contenedorProductos");
+    contenedorProductos.innerHTML = "";
 
-  data.forEach((item) => {
-    const card = document.createElement("div");
-    card.innerHTML = `  
-      <p>ID: ${item._id}</p>  <!-- Asegúrate de que el campo correcto esté siendo usado -->
-      <p>${item.title}</p>
-      <p>${item.price}</p>
-      <button>Eliminar</button>
-    `;
-    contenedorProductos.appendChild(card);
+    data.forEach((item) => {
+      const card = document.createElement("div");
+      card.innerHTML = `  
+        <p>ID: ${item._id}</p>
+        <p>${item.title}</p>
+        <p>${item.price}</p>
+        <button>Eliminar</button>
+      `;
+      contenedorProductos.appendChild(card);
 
-    card.querySelector("button").addEventListener("click", () => {
-      eliminarProducto(item._id);
+      card.querySelector("button").addEventListener("click", () => {
+        eliminarProducto(item._id);
+      });
     });
-  });
-};
-
-const eliminarProducto = (id) => {
-  socket.emit("eliminarProducto", id);
-};
-
-const btnEnviar = document.getElementById("btnEnviar");
-if (btnEnviar) {
-  btnEnviar.addEventListener("click", () => {
-    agregarProducto();
-  });
-} else {
-  console.error("btnEnviar no encontrado en el DOM");
-}
-
-const agregarProducto = () => {
-  const producto = {
-    title: document.getElementById("title").value,
-    description: document.getElementById("description").value,
-    price: document.getElementById("price").value,
-    img: document.getElementById("img").value,
-    code: document.getElementById("code").value,
-    stock: document.getElementById("stock").value,
-    category: document.getElementById("category").value,
-    status: document.getElementById("status").value === "true",
   };
 
-  socket.emit("agregarProducto", producto);
-};
+  const eliminarProducto = (id) => {
+    socket.emit("eliminarProducto", id);
+  };
+
+  const btnEnviar = document.getElementById("btnEnviar");
+  if (btnEnviar) {
+    btnEnviar.addEventListener("click", () => {
+      agregarProducto();
+    });
+  } else {
+    console.error("btnEnviar no encontrado en el DOM");
+  }
+
+  const agregarProducto = () => {
+    const producto = {
+      title: document.getElementById("title").value,
+      description: document.getElementById("description").value,
+      price: document.getElementById("price").value,
+      img: document.getElementById("img").value,
+      code: document.getElementById("code").value,
+      stock: document.getElementById("stock").value,
+      category: document.getElementById("category").value,
+      status: document.getElementById("status").value === "true",
+    };
+
+    socket.emit("agregarProducto", producto);
+  };
+});

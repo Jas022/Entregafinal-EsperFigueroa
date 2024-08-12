@@ -18,6 +18,10 @@
               <p class="card-description">{{this.description}}</p>
               <p class="card-price">Precio: ${{this.price}}</p>
               <p class="card-category">Categoría: {{this.category}}</p>
+              <a href="/products/{{this.id}}" class="btn-details">Ver detalles</a>
+              <form action="/cart/add/{{this.id}}" method="post" class="form-add-to-cart">
+                <button type="submit" class="btn-add-to-cart">Agregar al carrito</button>
+              </form>
             </div>
           </div>
         {{/each}}
@@ -41,6 +45,6 @@
     </div>
 
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-    <script src="/src/public/index.js"></script>
+    <script src="/index.js"></script>
   </body>
 </html>

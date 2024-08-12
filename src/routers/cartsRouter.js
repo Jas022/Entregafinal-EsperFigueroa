@@ -100,7 +100,6 @@ router.delete("/:cid", async (req, res) => {
   }
 });
 
-// Ruta para actualizar el carrito completo
 router.put("/:cid", async (req, res) => {
   const cartId = req.params.cid;
   const products = req.body.products;
@@ -129,7 +128,7 @@ router.put("/:cid", async (req, res) => {
   }
 });
 
-// Ruta para actualizar la cantidad de un producto específico en el carrito
+
 router.put("/:cartId/products/:productId", async (req, res) => {
   const { cartId, productId } = req.params;
   const { quantity } = req.body;
@@ -149,5 +148,6 @@ router.put("/:cartId/products/:productId", async (req, res) => {
     res.status(500).json({ status: "error", error: error.message });
   }
 });
+
 
 export default router;
